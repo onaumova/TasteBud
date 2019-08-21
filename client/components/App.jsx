@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import Search from './Search.jsx';
+import Recommendations from './Recommendations.jsx'
 
 
 class App extends Component {
@@ -6,7 +8,11 @@ class App extends Component {
         return (
             <div>
             <div className="container">
-          <h2>Search Similar</h2>
+          <h2>Search Similar to</h2>
+          </div>
+          <Search/>
+          <div>
+            <Recommendations/>
           </div>
         </div>
         );
