@@ -4,19 +4,24 @@ import * as types from "../actions/actionTypes.js";
 const initialState = {
   input: "",
   category: "movie",
-  recs: []
+  recs: [],
+  favs: []
 };
 
 const reducers = (state = initialState, action) => {
+  let recs;
   switch (action.type) {
     case types.CHANGE_CATEGORY:
-      return {};
+      return { ...state, category: action.payload };
 
     case types.SET_INPUT:
-      return {};
+      return { ...state, input: action.payload };
 
     case types.SET_RECOMMENDATIONS:
-      return {};
+      return { ...state, recs: action.payload };
+
+    case types.SET_FAVORITES:
+      return { ...state, favs: action.payload };
 
     default:
       return state;

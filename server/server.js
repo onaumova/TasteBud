@@ -2,30 +2,16 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const path = require("path");
-const mongoose = require("mongoose");
 const port = 3000;
 const tasteRoutes = express.Router();
 const fetch = require("node-fetch");
 
-app.use("/tastes", tasteRoutes);
-
-// MongoDB connection url
-const mongoURL = "mongodb://localhost/tastes";
+//app.use("/tastes", tasteRoutes);
 
 app.use(bodyParser.json());
 
-// Connect to MongoDB
-// mongoose.connect( mongoURL, (err, db) => {
-//     if(err) console.log( 'mongodb Error: ' + err );
-// });
-// const connection = mongoose.connection;
-
-// connection.once('open', function() {
-//     console.log("MongoDB database connection established successfully");
-// })
-
-//const routes = require('./routes');
-//app.use('/', routes);
+const routes = require('./routes');
+app.use('/db', routes);
 
 // serve index.html on the route '/'
 app.get("/", (req, res) => {
@@ -33,16 +19,21 @@ app.get("/", (req, res) => {
 });
 
 app.get("/search", (req, res) => {
-    //dsgfdfgdfg
-    //use the shit from the query string (deconstruct the query)
-    console.log(req.query)
-    fetch(
-    "https://tastedive.com/api/similar?k=342876-Similari-GXWSB002&type=movie&limit=15&q=Guardians%20Of%20The%20Galaxy"
+  //use the shit from the query string (deconstruct the query)
+  let { category, input } = req.query;
+  let inputURI = encodeURIComponent(input);
+  //console.log("cat2", inputURI);
+  fetch(
+    `https://tastedive.com/api/similar?k=342876-Similari-GXWSB002&type=${category}&limit=15&q=${inputURI}`
   )
     .then(res => res.json())
     .then(recs => {
-      console.log("recs", recs);
-      console.log(recs.Similar.Results[0]);
+      res.locals.recs = recs.Similar.Results;
+      //console.log("recs", recs);
+      console.log("server", recs.Similar.Results[0]);
+      res.status(200).send({
+        recs:[ ...res.locals.recs]}
+         )
     })
     .catch(err => console.log("Unable to fetch the recommedations", err));
 });
