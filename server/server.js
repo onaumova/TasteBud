@@ -11,12 +11,14 @@ const fetch = require("node-fetch");
 app.use(bodyParser.json());
 
 const routes = require('./routes');
-app.use('/db', routes);
+app.use('/db', routes); 
 
 // serve index.html on the route '/'
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/public/index.html"));
 });
+
+app.use('/build', express.static(path.resolve(__dirname, '../build')))
 
 app.get("/search", (req, res) => {
   //use the shit from the query string (deconstruct the query)
